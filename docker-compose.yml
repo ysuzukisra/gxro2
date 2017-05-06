@@ -1,0 +1,58 @@
+version: "2"
+
+services:
+  rproxy:
+    image: httpd:alpine
+    #restart: always
+    volumes:
+      - ./share:/gxro/share
+      - ./rproxy/htdocs:/usr/local/apache2/htdocs
+      - ./rproxy/apache.conf/httpd.conf:/usr/local/apache2/conf/httpd.conf
+      - ./rproxy/apache.conf/gxro:/usr/local/apache2/conf/gxro
+    ports:
+      - 80:80
+
+  redmine:
+    build:
+      context: .
+      dockerfile: Dockerfile.my_redmine31
+    image: my_redmine31
+    environment:
+      REDMINE_DB_MYSQL: mysql
+      REDMINE_DB_PASSWORD: suzusaka
+      RAILS_RELATIVE_URL_ROOT: /redmine
+    depends_on:
+      - mysql
+    volumes:
+      - ./share:/gxro/share
+      - ./redmine/files:/usr/src/redmine/files
+      - ./redmine/plugins:/usr/src/redmine/plugins
+    #restart: always
+    ports:
+      - 3000:3000
+
+  mysql:
+    image: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: suzusaka
+      MYSQL_DATABASE: redmine
+    volumes:
+      - ./share:/gxro/share
+      - ./mysql/db:/var/lib/mysql
+    #restart: always
+#    ports:
+#      - 17861:3306
+    command: "--character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci"
+
+  jenkins:
+    image: jenkins
+    volumes:
+      - ./share:/gxro/share
+      - ./jenkins/home:/var/jenkins_home
+    user: root
+    environment:
+      JENKINS_OPTS: --prefix=/jenkins
+    #restart: always
+    expose:
+      - 8080
+      - 50000
