@@ -1,0 +1,18 @@
+FROM docker:dind
+
+RUN set -x && \
+    apk update && \
+    apk add \
+      bash \
+      git \
+      openjdk7-jre \
+      openssh \
+      vim \
+      && \
+    rm -rf /var/cache/apk/* && \
+    ssh-keygen -A && \
+    echo root:dind | chpasswd && \
+    sed -i.ORG -e '1a /usr/sbin/sshd -o "PermitRootLogin yes" -D &' /usr/local/bin/docker-entrypoint.sh && \
+    echo done.
+
+EXPOSE 22
