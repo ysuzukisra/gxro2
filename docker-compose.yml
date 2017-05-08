@@ -16,6 +16,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.my_redmine31
+      #args:
+      #  http_proxy: ${http_proxy}
     image: my_redmine31
     environment:
       REDMINE_DB_MYSQL: mysql
