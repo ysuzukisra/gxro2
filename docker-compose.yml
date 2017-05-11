@@ -10,14 +10,14 @@ services:
       - ./rproxy/apache.conf/httpd.conf:/usr/local/apache2/conf/httpd.conf
       - ./rproxy/apache.conf/gxro:/usr/local/apache2/conf/gxro
     ports:
-      - 80:80
+      - "80:80"
 
   redmine:
     build:
       context: .
       dockerfile: Dockerfile.my_redmine31
-      #args:
-      #  http_proxy: ${http_proxy}
+      args:
+        http_proxy: ${http_proxy}
     image: my_redmine31
     environment:
       REDMINE_DB_MYSQL: mysql
@@ -30,8 +30,8 @@ services:
       - ./redmine/files:/usr/src/redmine/files
       - ./redmine/plugins:/usr/src/redmine/plugins
     #restart: always
-    ports:
-      - 3000:3000
+    expose:
+      - "3000"
 
   mysql:
     image: mysql
@@ -43,8 +43,17 @@ services:
       - ./mysql/db:/var/lib/mysql
     #restart: always
 #    ports:
-#      - 17861:3306
+#      - "17861:3306"
     command: "--character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci"
+
+  gitbucket:
+    image: takezoe/gitbucket
+    volumes:
+      - ./gitbucket:/gitbucket
+    command: ["java", "-jar", "/opt/gitbucket.war", "--prefix=/gitbucket"]
+    expose:
+      - "8080"
+      - "29418"
 
   jenkins:
     image: jenkins
@@ -59,3 +68,17 @@ services:
     expose:
       - 8080
       - 50000
+
+  dind:
+    image: dind
+    build:
+      context: .
+      dockerfile: Dockerfile.dind
+      args:
+        http_proxy:  "${http_proxy}"
+        https_proxy: "${http_proxy}"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - .:/gxro
+    ports:
+      - "10022:22"
