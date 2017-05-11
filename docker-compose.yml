@@ -14,8 +14,8 @@ services:
 
   redmine:
     build:
-      context: .
-      dockerfile: Dockerfile.my_redmine31
+      context: build/my_redmine31
+      dockerfile: Dockerfile
       args:
         http_proxy: ${http_proxy}
     image: my_redmine31
@@ -42,8 +42,8 @@ services:
       - ./share:/gxro/share
       - ./mysql/db:/var/lib/mysql
     #restart: always
-#    ports:
-#      - "17861:3306"
+    expose:
+      - "3306"
     command: "--character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci"
 
   gitbucket:
@@ -72,8 +72,8 @@ services:
   dind:
     image: dind
     build:
-      context: .
-      dockerfile: Dockerfile.dind
+      context: build/dind
+      dockerfile: Dockerfile
       args:
         http_proxy:  "${http_proxy}"
         https_proxy: "${http_proxy}"
