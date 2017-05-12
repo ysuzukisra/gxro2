@@ -1,14 +1,14 @@
 version: "2"
 
 services:
-  rproxy:
+  gxro2:
     image: httpd:alpine
     #restart: always
     volumes:
-      - ./share:/gxro/share
-      - ./rproxy/htdocs:/usr/local/apache2/htdocs
-      - ./rproxy/apache.conf/httpd.conf:/usr/local/apache2/conf/httpd.conf
-      - ./rproxy/apache.conf/gxro:/usr/local/apache2/conf/gxro
+      - ./share:/gxro2/share
+      - ./htdocs:/usr/local/apache2/htdocs
+      - ./apache.conf/httpd.conf:/usr/local/apache2/conf/httpd.conf
+      - ./apache.conf/gxro:/usr/local/apache2/conf/gxro
     ports:
       - "80:80"
 
@@ -26,7 +26,7 @@ services:
     depends_on:
       - mysql
     volumes:
-      - ./share:/gxro/share
+      - ./share:/gxro2/share
       - ./redmine/files:/usr/src/redmine/files
       - ./redmine/plugins:/usr/src/redmine/plugins
     #restart: always
@@ -39,7 +39,7 @@ services:
       MYSQL_ROOT_PASSWORD: suzusaka
       MYSQL_DATABASE: redmine
     volumes:
-      - ./share:/gxro/share
+      - ./share:/gxro2/share
       - ./mysql/db:/var/lib/mysql
     #restart: always
     expose:
@@ -58,7 +58,7 @@ services:
   jenkins:
     image: jenkins
     volumes:
-      - ./share:/gxro/share
+      - ./share:/gxro2/share
       - ./jenkins/home:/var/jenkins_home
     user: root
     environment:

@@ -2,3 +2,5 @@ gitbucket/
 mysql/
 jenkins/
 share/
+*.bak
+*.OLD
