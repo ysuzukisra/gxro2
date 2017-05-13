@@ -3,7 +3,7 @@ version: "2"
 services:
   gxro2:
     image: httpd:alpine
-    #restart: always
+    restart: always
     volumes:
       - ./share:/gxro2/share
       - ./htdocs:/usr/local/apache2/htdocs
@@ -29,7 +29,7 @@ services:
       - ./share:/gxro2/share
       - ./redmine/files:/usr/src/redmine/files
       - ./redmine/plugins:/usr/src/redmine/plugins
-    #restart: always
+    restart: always
     expose:
       - "3000"
 
@@ -41,7 +41,7 @@ services:
     volumes:
       - ./share:/gxro2/share
       - ./mysql/db:/var/lib/mysql
-    #restart: always
+    restart: always
     expose:
       - "3306"
     command: "--character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci"
@@ -51,6 +51,7 @@ services:
     volumes:
       - ./gitbucket:/gitbucket
     command: ["java", "-jar", "/opt/gitbucket.war", "--prefix=/gitbucket"]
+    restart: always
     expose:
       - "8080"
       - "29418"
@@ -64,7 +65,7 @@ services:
     environment:
       JENKINS_OPTS: --prefix=/jenkins
       JAVA_OPTS: -Duser.timezone=Asia/Tokyo -Dfile.encoding=UTF-8 -Dsun.jnu.encoding=UTF-8
-    #restart: always
+    restart: always
     expose:
       - 8080
       - 50000
@@ -80,5 +81,6 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - .:/gxro
+    restart: always
     ports:
-      - "10022:22"
+      - "22:22"
