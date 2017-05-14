@@ -80,7 +80,7 @@ services:
         https_proxy: "${http_proxy}"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - .:/gxro
+      - .:/gxro2
     restart: always
     ports:
       - "22:22"
