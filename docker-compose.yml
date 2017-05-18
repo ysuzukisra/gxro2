@@ -57,10 +57,13 @@ services:
       - "29418"
 
   mail:
-    image: tvial/docker-mailserver:latest
-    #hostname: mail
-    #domainname: domain.com
-    #container_name: mail
+    #image: tvial/docker-mailserver:latest
+    image: my-docker-mailserver
+    build:
+      context: build/my-docker-mailserver
+      dockerfile: Dockerfile
+    hostname: mail
+    domainname: gxro2
     ports:
       - "25:25"
       - "143:143"
@@ -69,14 +72,12 @@ services:
     volumes:
       - maildata:/var/mail
       - mailstate:/var/mail-state
-      - ./mailconfig/:/tmp/docker-mailserver/
+      - ./mailconf/:/tmp/docker-mailserver/
     environment:
       - OVERRIDE_HOSTNAME=mail.gxro2
       - POSTMASTER_ADDRESS=postmaster@gxro2
       - ONE_DIR=1
-      - DMS_DEBUG=1
-    #cap_add:
-      #- NET_ADMIN
+      - DMS_DEBUG=0
 
   jenkins:
     image: jenkins
